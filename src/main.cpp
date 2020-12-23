@@ -46,6 +46,69 @@ void write_info(FILE* fp, std::string str) {
 bool noArrows = false;
 bool leftHand = false;
 
+Il2CppObject* leftSaberTransform = nullptr;
+Il2CppObject* rightSaberTransform = nullptr;
+bool hookedQosmetics = false;
+MAKE_HOOK_OFFSETLESS(QosmeticsTrail_Update, void, Il2CppObject *self) {
+
+	if (noArrows && leftSaberTransform != nullptr && rightSaberTransform != nullptr) {
+		Il2CppClass* transformClass = il2cpp_utils::GetClassFromName("UnityEngine", "Transform");
+        const MethodInfo* getMethod = il2cpp_functions::class_get_method_from_name(transformClass, "get_localPosition", 0);
+        const MethodInfo* setMethod = il2cpp_functions::class_get_method_from_name(transformClass, "set_localPosition", 1);
+        const MethodInfo* setRotate = il2cpp_functions::class_get_method_from_name(transformClass, "Rotate", 1);
+        const MethodInfo* setTranslate = il2cpp_functions::class_get_method_from_name(transformClass, "Translate", 1);
+        const MethodInfo* getLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "get_localRotation", 0);
+        const MethodInfo* setLocalRotation = il2cpp_functions::class_get_method_from_name(transformClass, "set_localRotation", 1);
+
+        Vector3 rightSaberLocalPosition = CRASH_UNLESS(il2cpp_utils::RunMethod<Vector3>(rightSaberTransform, getMethod));
+        Vector3 leftSaberLocalPosition = CRASH_UNLESS(il2cpp_utils::RunMethod<Vector3>(leftSaberTransform, getMethod));
+        
+        Quaternion rightSaberLocalRotation = CRASH_UNLESS(il2cpp_utils::RunMethod<Quaternion>(rightSaberTransform, getLocalRotation));
+        Quaternion leftSaberLocalRotation = CRASH_UNLESS(il2cpp_utils::RunMethod<Quaternion>(leftSaberTransform, getLocalRotation));
+
+        if (!leftHand) {
+            if (flip) {
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setMethod, rightSaberLocalPosition));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setLocalRotation, rightSaberLocalRotation));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setRotate, Vector3{ 0, 180, 0 }));
+
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{ 0, 0, 0.075 }));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setTranslate, Vector3{ 0, 0, 0.26 }));
+            }
+            else {
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setMethod, rightSaberLocalPosition));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setLocalRotation, rightSaberLocalRotation));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 0 }));
+
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setTranslate, Vector3{ 0, 0, 0.075 }));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{ 0, 0, 0.26 }));
+            }
+            
+        }
+        else {
+
+            if (flip) {
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setMethod, leftSaberLocalPosition));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setLocalRotation, leftSaberLocalRotation));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setRotate, Vector3{ 0, 180, 0 }));
+
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setTranslate, Vector3{ 0, 0, 0.075 }));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{ 0, 0, 0.26 }));
+            }
+            else {
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setMethod, leftSaberLocalPosition));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setLocalRotation, leftSaberLocalRotation));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setRotate, Vector3{ 0, 180, 0 }));
+
+                CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaberTransform, setTranslate, Vector3{ 0, 0, 0.075 }));
+                CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaberTransform, setTranslate, Vector3{ 0, 0, 0.26 }));
+            }
+        }
+	}
+	
+	QosmeticsTrail_Update(self);
+}
+
 MAKE_HOOK_OFFSETLESS(StandardLevelScenesTransitionSetupDataSO, void, Il2CppObject* self, Il2CppString* gameMode, Il2CppObject* difficultyBeatmap, Il2CppObject* overrideEnvironmentSettings, Il2CppObject* overrideColorScheme, Il2CppObject* gameplayModifiers, Il2CppObject* playerSpecificSettings, Il2CppObject* practiceSettings, Il2CppObject* backButtonText, bool useTestNoteCutSoundEffects) {
 	if (!alwaysDarthMaul) {
 		noArrows = CRASH_UNLESS(il2cpp_utils::GetPropertyValue<bool>(gameplayModifiers, "noArrows"));
@@ -87,13 +150,16 @@ MAKE_HOOK_OFFSETLESS(GameplayModifierToggle_Start, void, Il2CppObject* self) {
 	}
 }
 
-
-Il2CppObject* customLeftSaberTransform;
-Il2CppObject* customRightSaberTransform;
 MAKE_HOOK_OFFSETLESS(SaberManager_Update, void, Il2CppObject* self) {
 	
 
 	if (noArrows) {
+        
+        if(il2cpp_utils::FindMethodUnsafe("Qosmetics", "QosmeticsTrail", "Update", 0) && !hookedQosmetics) {
+            log("Installing Qosmetics hook");
+            INSTALL_HOOK_OFFSETLESS(QosmeticsTrail_Update, il2cpp_utils::FindMethodUnsafe("Qosmetics", "QosmeticsTrail", "Update", 0));
+            hookedQosmetics = true;
+        }
 
 		Il2CppObject* leftSaber = CRASH_UNLESS(il2cpp_utils::GetFieldValue<Il2CppObject*>(self, "_leftSaber"));
 		Il2CppObject* rightSaber = CRASH_UNLESS(il2cpp_utils::GetFieldValue<Il2CppObject*>(self, "_rightSaber"));
@@ -101,17 +167,12 @@ MAKE_HOOK_OFFSETLESS(SaberManager_Update, void, Il2CppObject* self) {
 		if (leftSaber != nullptr && rightSaber != nullptr) {
 
 			Il2CppClass* componentsClass = il2cpp_utils::GetClassFromName("", "Saber");
-			Il2CppObject* leftSaberTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaber, il2cpp_functions::class_get_method_from_name(componentsClass, "get_transform", 0)));
-			Il2CppObject* rightSaberTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaber, il2cpp_functions::class_get_method_from_name(componentsClass, "get_transform", 0)));
-
+			leftSaberTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(leftSaber, il2cpp_functions::class_get_method_from_name(componentsClass, "get_transform", 0)));
+			rightSaberTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(rightSaber, il2cpp_functions::class_get_method_from_name(componentsClass, "get_transform", 0)));
 
 			Il2CppClass* transformClass = il2cpp_utils::GetClassFromName("UnityEngine", "Transform");
-			const MethodInfo* findMethod = il2cpp_functions::class_get_method_from_name(transformClass, "Find", 1);
-			//if (rightSaberTransform) customRightSaberTransform = CRASH_UNLESS(il2cpp_utils::RunMethod(transformClass, findMethod, il2cpp_utils::createcsstr("rightSaberTransformCache")));
 
-
-
-			if (leftSaberTransform != nullptr && rightSaberTransform != nullptr) {
+			if (leftSaberTransform != nullptr && rightSaberTransform != nullptr && !hookedQosmetics) {
 				const MethodInfo* getMethod = il2cpp_functions::class_get_method_from_name(transformClass, "get_localPosition", 0);
 				const MethodInfo* setMethod = il2cpp_functions::class_get_method_from_name(transformClass, "set_localPosition", 1);
 				const MethodInfo* setRotate = il2cpp_functions::class_get_method_from_name(transformClass, "Rotate", 1);
@@ -188,18 +249,6 @@ MAKE_HOOK_OFFSETLESS(SaberTypeExtensions_Node, int, Il2CppObject* saberType) {
 	
 
 }
-
-bool hookedQosmetics = false;
-MAKE_HOOK_OFFSETLESS(QosmeticsTrail_Update, void, Il2CppObject *self) {
-
-	if (!noArrows) {
-		//Il2CppObject* leftSaber = CRASH_UNLESS(il2cpp_utils::GetFieldValue<Il2CppObject*>(self, "_leftSaber"));
-		//Il2CppObject* rightSaber = CRASH_UNLESS(il2cpp_utils::GetFieldValue<Il2CppObject*>(self, "_rightSaber"));
-		QosmeticsTrail_Update(self);
-	}
-	//
-}
-
 
 
 MAKE_HOOK_OFFSETLESS(HealthWarningSceneStart_Start, void, Il2CppObject *self) {
