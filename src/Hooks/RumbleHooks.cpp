@@ -15,16 +15,15 @@
 #include "UnityEngine/XR/XRNode.hpp"
 #include "Libraries/HM/HMLib/VR/HapticPresetSO.hpp"
 
-
-
 bool currentlyInLevel = false;
-
-
-
 
 MAKE_AUTO_HOOK_MATCH(SaberClashEffect_LateUpdate, &GlobalNamespace::SaberClashEffect::LateUpdate, void, GlobalNamespace::SaberClashEffect* self)
 {
-	if (config.playStyleMode == 5) {
+	if (config.playStyleMode == 3) {
+		//Unicorn
+		return;
+	}
+	else if (config.playStyleMode == 5) {
 		//OneHandDarthMaul
 		return;
 	}
