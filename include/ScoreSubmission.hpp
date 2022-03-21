@@ -1,0 +1,2 @@
+void disableScoreSubmission();
+void enableScoreSubmission();
