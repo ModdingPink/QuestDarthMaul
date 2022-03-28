@@ -28,7 +28,7 @@ namespace EnhancedPlay::UI
 		{
 			GameObject* container = CreateScrollableSettingsContainer(get_transform());
 			
-            
+            /*
             std::vector<StringW> playStyleStringWVector = { 
                 "Default",
                 "Darth Maul One Hand",
@@ -73,7 +73,7 @@ namespace EnhancedPlay::UI
                     SaveConfig();
                 }
             );
-
+            */
             std::vector<StringW> mainHandStringWVector = {
                 "Right",
                 "Left"
@@ -92,6 +92,7 @@ namespace EnhancedPlay::UI
                 }
             );
 
+			TOGGLE(swapControllers, "Swap Controllers");
 
 			TOGGLE(disableRumble, "Disable Rumble");
 		}

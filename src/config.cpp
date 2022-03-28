@@ -27,9 +27,18 @@ void SaveConfig()
 	doc.SetObject();
 	rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 	
-	SAVE(playStyleMode);
+	SAVE(darthMaulOneHand);
+	SAVE(darthMaulBothHands);
+	SAVE(unicornMode);
+	SAVE(oneSaber);
+	SAVE(oneColour);
 	SAVE(mainHand);
 	SAVE(disableRumble);
+	SAVE(swapControllers);
+	SAVE(swapTopAndBottomRow);
+	SAVE(halfNotes);
+	SAVE(ignoreBurstSliders);
+	SAVE(ignoreArcSliders);
 
 
 	getConfig().Write();
@@ -42,9 +51,18 @@ bool LoadConfig()
 	bool foundEverything = true;
 	rapidjson::Document& doc = getConfig().config;
 
-	LOAD(playStyleMode, GetInt());
 	LOAD(mainHand, GetInt());
 	LOAD(disableRumble, GetBool());
+	LOAD(darthMaulOneHand, GetBool());
+	LOAD(darthMaulBothHands, GetBool());
+	LOAD(unicornMode, GetBool());
+	LOAD(oneSaber, GetBool());
+	LOAD(oneColour, GetBool());
+	LOAD(swapControllers, GetBool());
+	LOAD(swapTopAndBottomRow, GetBool());
+	LOAD(ignoreBurstSliders, GetBool());
+	LOAD(halfNotes, GetBool());
+	LOAD(ignoreArcSliders, GetBool());
 
 	if (!foundEverything) 
 	{
