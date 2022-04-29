@@ -1,6 +1,7 @@
 #include "config.hpp"
 #include "logging.hpp"
 #include "beatsaber-hook/shared/config/config-utils.hpp"
+#include "static-defines.h"
 
 config_t config;
 

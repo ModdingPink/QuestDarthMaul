@@ -14,7 +14,7 @@
     "dependencies": [
       {
         "id": "beatsaber-hook",
-        "versionRange": "^3.6.8",
+        "versionRange": "^3.8.1",
         "additionalData": {
           "extraFiles": [
             "src/inline-hook"
@@ -23,14 +23,14 @@
       },
       {
         "id": "custom-types",
-        "versionRange": "^0.15.8",
+        "versionRange": "^0.15.9",
         "additionalData": {
           "private": true
         }
       },
       {
         "id": "codegen",
-        "versionRange": "^0.21.0",
+        "versionRange": "^0.22.0",
         "additionalData": {
           "private": true
         }
@@ -44,14 +44,14 @@
       },
       {
         "id": "modloader",
-        "versionRange": "^1.2.3",
+        "versionRange": "*",
         "additionalData": {
           "private": true
         }
       },
       {
         "id": "questui",
-        "versionRange": "^0.13.3",
+        "versionRange": "*",
         "additionalData": {
           "private": true
         }
@@ -81,7 +81,7 @@
     {
       "dependency": {
         "id": "modloader",
-        "versionRange": "^1.2.3",
+        "versionRange": "*",
         "additionalData": {
           "soLink": "https://github.com/sc2ad/QuestLoader/releases/download/v1.2.3/libmodloader64.so",
           "overrideSoName": "libmodloader.so",
@@ -103,52 +103,52 @@
     {
       "dependency": {
         "id": "custom-types",
-        "versionRange": "^0.15.8",
+        "versionRange": "^0.15.9",
         "additionalData": {
-          "soLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.8/libcustom-types.so",
-          "debugSoLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.8/debug_libcustom-types.so",
+          "soLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.9/libcustom-types.so",
+          "debugSoLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.9/debug_libcustom-types.so",
           "overrideSoName": "libcustom-types.so",
-          "modLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.8/CustomTypes.qmod",
-          "branchName": "version-v0.15.8"
+          "modLink": "https://github.com/sc2ad/Il2CppQuestTypePatching/releases/download/v0.15.9/CustomTypes.qmod",
+          "branchName": "version-v0.15.9"
         }
       },
-      "version": "0.15.8"
+      "version": "0.15.9"
     },
     {
       "dependency": {
         "id": "beatsaber-hook",
-        "versionRange": "^3.6.8",
+        "versionRange": "^3.8.1",
         "additionalData": {
-          "soLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.7.4/libbeatsaber-hook_3_7_4.so",
-          "debugSoLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.7.4/debug_libbeatsaber-hook_3_7_4.so",
-          "branchName": "version-v3.7.4"
+          "soLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.8.1/libbeatsaber-hook_3_8_1.so",
+          "debugSoLink": "https://github.com/sc2ad/beatsaber-hook/releases/download/v3.8.1/debug_libbeatsaber-hook_3_8_1.so",
+          "branchName": "version-v3.8.1"
         }
       },
-      "version": "3.7.4"
+      "version": "3.8.1"
     },
     {
       "dependency": {
         "id": "codegen",
-        "versionRange": "^0.21.0",
+        "versionRange": "^0.22.0",
         "additionalData": {
-          "soLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.21.0/libcodegen.so",
+          "soLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.22.0/libcodegen.so",
           "overrideSoName": "libcodegen.so",
-          "modLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.21.0/Codegen.qmod",
-          "branchName": "version-v0.21.0"
+          "modLink": "https://github.com/sc2ad/BeatSaber-Quest-Codegen/releases/download/v0.22.0/Codegen.qmod",
+          "branchName": "version-v0.22.0"
         }
       },
-      "version": "0.21.0"
+      "version": "0.22.0"
     },
     {
       "dependency": {
         "id": "questui",
-        "versionRange": "^0.13.3",
+        "versionRange": "*",
         "additionalData": {
-          "soLink": "https://github.com/darknight1050/questui/releases/download/v0.13.4/libquestui.so",
-          "debugSoLink": "https://github.com/darknight1050/questui/releases/download/v0.13.4/debug_libquestui.so",
+          "soLink": "https://github.com/darknight1050/questui/releases/download/v0.13.5/libquestui.so",
+          "debugSoLink": "https://github.com/darknight1050/questui/releases/download/v0.13.5/debug_libquestui.so",
           "overrideSoName": "libquestui.so",
-          "modLink": "https://github.com/darknight1050/questui/releases/download/v0.13.4/QuestUI.qmod",
-          "branchName": "version-v0.13.4",
+          "modLink": "https://github.com/darknight1050/questui/releases/download/v0.13.5/QuestUI.qmod",
+          "branchName": "version-v0.13.5",
           "compileOptions": {
             "systemIncludes": [
               "shared/cppcodec"
@@ -156,7 +156,7 @@
           }
         }
       },
-      "version": "0.13.4"
+      "version": "0.13.5"
     }
   ]
 }

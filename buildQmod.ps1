@@ -1,2 +1,4 @@
 & ./build.ps1
-& ./createqmod.ps1 EnhancedPlay -clean
+$env:qmodName = "EnhancedPlay"
+$env:module_id = "enhancedplay"
+& ./CreateQmod.ps1

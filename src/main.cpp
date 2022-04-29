@@ -12,6 +12,7 @@
 
 #include "hooks.hpp"
 #include "logging.hpp"
+#include "static-defines.h"
 
 #include "config.hpp"
 #include "ScoreSubmission.hpp"
@@ -22,11 +23,11 @@
 ModInfo modInfo;
 
 void disableScoreSubmission() {
-	bs_utils::Submission::disable(modInfo);
+    bs_utils::Submission::disable(modInfo);
 }
 
 void enableScoreSubmission() {
-	bs_utils::Submission::disable(modInfo);
+    bs_utils::Submission::disable(modInfo);
 }
 
 extern "C" void setup(ModInfo& info)

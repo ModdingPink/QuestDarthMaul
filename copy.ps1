@@ -1,19 +1,6 @@
-param (
-    [Parameter(Mandatory=$false)]
-    [Switch]$useDebug,
-    [Parameter(Mandatory=$false)]
-    [Switch]$log
-)
-
 & ./build.ps1
-if ($useDebug.IsPresent) {
-    & adb push build/debug/libenhancedplay.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/
-} else {
-    & adb push build/libenhancedplay.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/
-}
-
+& adb push libs/arm64-v8a/libsongbrowser.so /sdcard/Android/data/com.beatgames.beatsaber/files/mods/libsongbrowser.so
+& Start-Sleep -Milliseconds 500
 & adb shell am force-stop com.beatgames.beatsaber
 & adb shell am start com.beatgames.beatsaber/com.unity3d.player.UnityPlayerActivity
-if ($log.IsPresent) {
-    & ./log.ps1
-}
+& ./log.ps1

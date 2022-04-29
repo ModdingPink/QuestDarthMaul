@@ -1,6 +1,6 @@
 #include "logging.hpp"
+#include "static-defines.h"
 #include <map>
-#include <string>
 
 std::map<std::string, LoggerContextObject> contextLoggers;
 namespace EnhancedPlay
@@ -14,7 +14,7 @@ namespace EnhancedPlay
     LoggerContextObject& Logging::getContextLogger(const char* func, const char* file, int line)
     {
         std::string contextString(string_format("%s:%i", file, line));
-        std::map<std::string, LoggerContextObject>::iterator it = contextLoggers.find(contextString);
+        auto it = contextLoggers.find(contextString);
         if (it != contextLoggers.end())
         {
             return it->second;
