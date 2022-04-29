@@ -1,5 +1,3 @@
-
-#include "beatsaber-hook/shared/utils/logging.hpp"
 #include "beatsaber-hook/shared/utils/hooking.hpp"
 #include "hooks.hpp"
 #include "config.hpp"
@@ -10,90 +8,73 @@
 #include "GlobalNamespace/NoteData.hpp"
 #include "GlobalNamespace/SliderData.hpp"
 #include "UnityEngine/Transform.hpp"
-#include "UnityEngine/Quaternion.hpp"
 #include "UnityEngine/GameObject.hpp"
-#include "UnityEngine/Vector3.hpp"
 #include "UnityEngine/UI/VerticalLayoutGroup.hpp"
-#include "UnityEngine/UI/LayoutElement.hpp"
 #include "UnityEngine/RectOffset.hpp"
-#include "UnityEngine/Resources.hpp"
-#include "UnityEngine/Events/UnityAction_1.hpp"
-#include "UnityEngine/Events/UnityAction.hpp"
 
-MAKE_AUTO_HOOK_MATCH(BeatmapObjectSpawnController_HandleNoteDataCallback, &GlobalNamespace::BeatmapObjectSpawnController::HandleNoteDataCallback, void, GlobalNamespace::BeatmapObjectSpawnController* self, GlobalNamespace::NoteData* noteData)
-{
-    if(config.oneColour && ! config.oneSaber){
-        noteData->colorType = 1;
-    }else if(config.oneSaber){
+MAKE_AUTO_HOOK_MATCH(BeatmapObjectSpawnController_HandleNoteDataCallback, &GlobalNamespace::BeatmapObjectSpawnController::HandleNoteDataCallback, void, GlobalNamespace::BeatmapObjectSpawnController *self, GlobalNamespace::NoteData *noteData) {
+    auto colorType = noteData->get_colorType();
+    if (config.oneColour && !config.oneSaber) {
+        noteData->set_colorType(1);
+    } else if (config.oneSaber) {
         int toCheckFor = 0;
-        if(leftHanded) toCheckFor = 1;
-        if(noteData->colorType == toCheckFor){
+        if (leftHanded) toCheckFor = 1;
+        if (colorType == toCheckFor) {
             return;
         }
     }
 
-    
-    if(config.ignoreBurstSliders){
-        if(noteData->gameplayType == 2){
-            noteData->gameplayType = 0;
+    auto gamePlayType = noteData->get_gameplayType();
+    auto scoringType = noteData->get_scoringType();
+    if (config.ignoreBurstSliders) {
+        if (gamePlayType == 2) {
+            noteData->set_gameplayType(0);
         }
 
-        if(noteData->scoringType == 4 || noteData->scoringType == 5){
-            noteData->scoringType = 1;
-        }
-    }
-
-    if(config.ignoreArcSliders){
-        if(noteData->scoringType == 2 || noteData->scoringType == 3){
-            noteData->scoringType = 1;
+        if (scoringType == 4 || scoringType == 5) {
+            noteData->set_scoringType(1);
         }
     }
 
-
-    if(config.swapTopAndBottomRow){
-
-        if(noteData->noteLineLayer == 0){
-            noteData->noteLineLayer = 2;
-        }else if(noteData->noteLineLayer == 2){
-            noteData->noteLineLayer = 0;
-        }
-
+    if (config.ignoreArcSliders && (scoringType == 2 || scoringType == 3)) {
+        noteData->set_scoringType(1);
     }
 
-
-    if(config.halfNotes){
-        if(noteData->gameplayType != 1){
-            noteData->ChangeToBurstSliderHead();
+    auto noteLineLayer = noteData->get_noteLineLayer();
+    if (config.swapTopAndBottomRow) {
+        if (noteLineLayer == 0) {
+            noteData->set_noteLineLayer(2);
+        } else if (noteLineLayer == 2) {
+            noteData->set_noteLineLayer(0);
         }
+    }
+
+    if (config.halfNotes && gamePlayType != 1) {
+        noteData->ChangeToBurstSliderHead();
     }
 
     BeatmapObjectSpawnController_HandleNoteDataCallback(self, noteData);
 }
 
-MAKE_AUTO_HOOK_MATCH(BeatmapObjectSpawnController_HandleSliderDataCallback, &GlobalNamespace::BeatmapObjectSpawnController::HandleSliderDataCallback, void, GlobalNamespace::BeatmapObjectSpawnController* self, GlobalNamespace::SliderData* sliderNoteData)
-{
-    if(config.oneColour && ! config.oneSaber){
-        sliderNoteData->colorType = 1;
-    }else if(config.oneSaber){
+MAKE_AUTO_HOOK_MATCH(BeatmapObjectSpawnController_HandleSliderDataCallback, &GlobalNamespace::BeatmapObjectSpawnController::HandleSliderDataCallback, void, GlobalNamespace::BeatmapObjectSpawnController *self, GlobalNamespace::SliderData *sliderNoteData) {
+    auto colorType = sliderNoteData->get_colorType();
+    if (config.oneColour && !config.oneSaber) {
+        sliderNoteData->set_colorType(1);
+    } else if (config.oneSaber) {
         int toCheckFor = 0;
-        if(leftHanded) toCheckFor = 1;
-        if(sliderNoteData->colorType == toCheckFor){
+        if (leftHanded) toCheckFor = 1;
+        if (colorType == toCheckFor) {
             return;
         }
     }
 
-    if(config.ignoreBurstSliders){
-        if(sliderNoteData->sliderType == 1){
-            return;
-        }
-        
+    auto sliderType = sliderNoteData->get_sliceCount();
+    if (config.ignoreBurstSliders && sliderType == 1) {
+        return;
     }
 
-    if(config.ignoreArcSliders){
-        if(sliderNoteData->sliderType == 0){
-            return;
-        }
-        
+    if (config.ignoreArcSliders && sliderType == 0) {
+        return;
     }
 
     BeatmapObjectSpawnController_HandleSliderDataCallback(self, sliderNoteData);

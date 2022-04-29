@@ -48,7 +48,7 @@ UnityEngine::UI::LayoutElement* getLayoutElement(UnityEngine::GameObject* object
 
 UnityEngine::UI::Toggle* createEmptyModifierButton(UnityEngine::Transform* transform){
 		UnityEngine::UI::Toggle* modifToggle = QuestUI::BeatSaberUI::CreateModifierButton(transform, "", false, nullptr, [=](bool val){});
-		modifToggle->m_Interactable = false;
+		modifToggle->dyn_m_Interactable() = false;
 		modifToggle->get_transform()->Find("BG")->get_gameObject()->SetActive(false);
 		return modifToggle;
 }
@@ -66,13 +66,13 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 {
 	GameplaySetupViewController_RefreshContent(self);
 
-	//positiveColourValue = self->gameplayModifiersPanelController->gameplayModifierToggles[0]->positiveColor;
+	//positiveColourValue = self->dyn__gameplayModifiersPanelController()->gameplayModifierToggles[0]->positiveColor;
 
 
 	if (modifiersIncrementSetting == nullptr) {
 
-		defaultModifiersView = self->gameplayModifiersPanelController->get_transform()->Find("Modifiers");
-		customModifierContainer = QuestUI::BeatSaberUI::CreateModifierContainer(self->gameplayModifiersPanelController->get_transform());
+		defaultModifiersView = self->dyn__gameplayModifiersPanelController()->get_transform()->Find("Modifiers");
+		customModifierContainer = QuestUI::BeatSaberUI::CreateModifierContainer(self->dyn__gameplayModifiersPanelController()->get_transform());
 		customModifierContainer->get_transform()->Translate(0,-0.154,0);
 
 		getLayoutElement(customModifierContainer->get_gameObject())->set_preferredWidth(98.0);
@@ -90,7 +90,7 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 
 		DM1Button = QuestUI::BeatSaberUI::CreateModifierButton(horzGroup1->get_transform(), "Darth Maul", (config.darthMaulOneHand || config.darthMaulBothHands), [=](bool val){
 			if(val){
-				HMUI::ModalView* DarthMaulModal = QuestUI::BeatSaberUI::CreateModal(self->gameplayModifiersPanelController->get_transform(), [=](auto modal){ 
+				HMUI::ModalView* DarthMaulModal = QuestUI::BeatSaberUI::CreateModal(self->dyn__gameplayModifiersPanelController()->get_transform(), [=](auto modal){
 					UnityEngine::GameObject::Destroy(modal);
 					if(!(config.darthMaulBothHands || config.darthMaulOneHand)){
 						DM1Button->set_isOn(false);
@@ -100,11 +100,11 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 				getLayoutElement(DarthMaulContainer->get_gameObject())->set_preferredWidth(30.0);
 				QuestUI::BeatSaberUI::CreateModifierButton(DarthMaulContainer->get_transform(), "Darth Maul (One Hand)", false, [=](bool val){ 
 					DarthMaulModal->Hide(true, nullptr); 
-					if(UCMButton->m_IsOn){
+					if(UCMButton->dyn_m_IsOn()){
 					config.unicornMode = false;
 					UCMButton->set_isOn(false);
 					}
-					if(OneSaber->m_IsOn){
+					if(OneSaber->dyn_m_IsOn()){
 						config.oneSaber = false;
 						OneSaber->set_isOn(false);
 					}
@@ -116,11 +116,11 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 				createEmptyModifierButton(DarthMaulContainer->get_transform());
 				QuestUI::BeatSaberUI::CreateModifierButton(DarthMaulContainer->get_transform(), "Darth Maul (Two Hands)", false, [=](bool val){ 
 					DarthMaulModal->Hide(true, nullptr); 
-					if(UCMButton->m_IsOn){
+					if(UCMButton->dyn_m_IsOn()){
 					config.unicornMode = false;
 					UCMButton->set_isOn(false);
 					}
-					if(OneSaber->m_IsOn){
+					if(OneSaber->dyn_m_IsOn()){
 						config.oneSaber = false;
 						OneSaber->set_isOn(false);
 					}
@@ -144,17 +144,18 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 
 		UCMButton = QuestUI::BeatSaberUI::CreateModifierButton(horzGroup1->get_transform(), "Unicorn Mode<br><color=#f22>Disables Score Submission</color>", config.unicornMode, [=](bool val){
 
+            auto isOn = OneColour->dyn_m_IsOn();
 			config.unicornMode = val;
 			if(val){
-				if(DM1Button->m_IsOn){
+				if(DM1Button->dyn_m_IsOn()){
 					config.darthMaulOneHand = false;
 					DM1Button->set_isOn(false);
 				}
-				if(OneSaber->m_IsOn){
+				if(isOn){
 					config.oneSaber = false;
 					OneSaber->set_isOn(false);
 				}
-				if(!OneColour->m_IsOn){
+				if(!isOn){
 					config.oneColour = true;
 					OneColour->set_isOn(true);
 				}
@@ -167,15 +168,15 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 			config.oneSaber = val;
 
 			if(val){
-				if(DM1Button->m_IsOn){
+				if(DM1Button->dyn_m_IsOn()){
 					config.darthMaulOneHand = false;
 					DM1Button->set_isOn(false);
 				}
-				if(UCMButton->m_IsOn){
+				if(UCMButton->dyn_m_IsOn()){
 					config.unicornMode = false;
 					UCMButton->set_isOn(false);
 				}
-				if(OneColour->m_IsOn){
+				if(OneColour->dyn_m_IsOn()){
 					config.oneColour = false;
 					OneColour->set_isOn(false);
 				}
@@ -193,7 +194,7 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 			config.oneColour = val;
 
 			if(val){
-				if(OneSaber->m_IsOn){
+				if(OneSaber->dyn_m_IsOn()){
 					config.oneSaber = false;
 					OneSaber->set_isOn(false);
 				}
@@ -203,11 +204,11 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 		});
 
 		SwapTopBottomRow = QuestUI::BeatSaberUI::CreateModifierButton(horzGroup2->get_transform(), "TECH<br><color=#f22>Disables Score Submission</color>", config.swapTopAndBottomRow, [=](bool val){
-			if(!IgnoreChains->m_IsOn){
+			if(!IgnoreChains->dyn_m_IsOn()){
 				config.ignoreBurstSliders = true;
 				IgnoreChains->set_isOn(true);
 			}
-			if(!IgnoreArcs->m_IsOn){
+			if(!IgnoreArcs->dyn_m_IsOn()){
 				config.ignoreBurstSliders = true;
 				IgnoreArcs->set_isOn(true);
 			}
@@ -263,7 +264,7 @@ MAKE_AUTO_HOOK_MATCH(GameplaySetupViewController_RefreshContent, &GlobalNamespac
 
 		createEmptyModifierButton(horzGroup5->get_transform());
 
-		modifiersIncrementSetting = QuestUI::BeatSaberUI::CreateIncrementSetting(self->gameplayModifiersPanelController->get_transform(), "Select Modifiers", 0, 1.0, 0.0, true, true, 0.0, 1.0, {0, 0}, [=](float val) {
+		modifiersIncrementSetting = QuestUI::BeatSaberUI::CreateIncrementSetting(self->dyn__gameplayModifiersPanelController()->get_transform(), "Select Modifiers", 0, 1.0, 0.0, true, true, 0.0, 1.0, {0, 0}, [=](float val) {
 			if (val == 0.0) {
 				modifiersIncrementSetting->Text->SetText("Default Modifiers");
 				defaultModifiersView->get_gameObject()->SetActive(true);
